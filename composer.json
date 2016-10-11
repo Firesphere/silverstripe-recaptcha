@@ -15,10 +15,5 @@
   "require": {
     "silverstripe/spamprotection": "*",
     "silverstripe/framework": "~4.0"
-  },
-  "extra": {
-    "branch-alias": {
-      "dev-master": "3.0.x-dev"
-    }
   }
 }
