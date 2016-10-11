@@ -2,6 +2,11 @@
 /**
  * @package recaptcha
  */
+namespace Chillu\Forms\Recaptcha;
+
+use Chillu\Recaptcha\Forms\RecaptchaField;
+use SilverStripe\Control\Director;
+use SpamProtector;
 
 /**
  * Protecter class to handle spam protection interface
@@ -16,7 +21,7 @@ class RecaptchaProtector implements SpamProtector
      */
     public function getFormField($name = "RecaptchaField", $title = "Captcha", $value = null)
     {
-        $field = new RecaptchaField($name, $title, $value);
+        $field = RecaptchaField::create($name, $title, $value);
         $field->useSSL = Director::is_https();
 
         return $field;
@@ -27,6 +32,7 @@ class RecaptchaProtector implements SpamProtector
      */
     public function setFieldMapping($fieldMapping)
     {
+		// return nothing. It's unused.
     }
 
 }
