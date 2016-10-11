@@ -1,7 +1,17 @@
 <?php
+namespace Chillu\Recaptcha\Forms;
 /**
  * @package recaptcha
  */
+
+use Chillu\Recaptcha\Control\RecaptchaField_HTTPClient;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\Session;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Forms\FormField;
+use SilverStripe\Forms\Validator;
+use SilverStripe\View\ArrayData;
+use SilverStripe\View\Requirements;
 
 /**
  * Provides an {@link FormField} which allows form to validate for non-bot submissions
@@ -90,7 +100,7 @@ class RecaptchaField extends FormField
     /**
      * @var string
      */
-    private static $httpclient_class = 'RecaptchaField_HTTPClient';
+    private static $httpclient_class;
 
     public function __construct($name, $title = null, $value = null)
     {
@@ -162,7 +172,7 @@ class RecaptchaField extends FormField
         if(SapphireTest::is_running_test()) {
             $request = $_REQUEST;
         } else {
-            $request = Controller::curr()->getRequest();
+            $request = Controller::curr()->getRequest()->postVars();
         }
         // don't bother querying the recaptcha-service if fields were empty
         if (!array_key_exists('g-recaptcha-response', $request) || empty($request['g-recaptcha-response'])) {
@@ -181,7 +191,7 @@ class RecaptchaField extends FormField
             return false;
         }
 
-        $response = $this->recaptchaHTTPPost($_REQUEST['g-recaptcha-response']);
+        $response = $this->recaptchaHTTPPost($request['g-recaptcha-response']);
 
         if (!$response) {
             $validator->validationError(
@@ -201,7 +211,7 @@ class RecaptchaField extends FormField
         // get the payload of the response and decode it
         $response = json_decode($response, true);
 
-        if ($response['success'] != 'true') {
+        if ($response['success'] !== (bool)true) {
             // Count some errors as "user level", meaning they raise a validation error rather than a system error
             $userLevelErrors = array('missing-input-response', 'invalid-input-response');
             $error = implode(', ', $response['error-codes']);
@@ -271,45 +281,5 @@ class RecaptchaField extends FormField
         }
 
         return $this->client;
-    }
-}
-
-/**
- * Simple HTTP client, mainly to make it mockable.
- */
-class RecaptchaField_HTTPClient extends Object
-{
-
-    /**
-     * @param String $url
-     * @param $postVars
-     * @return String HTTPResponse
-     */
-    public function post($url, $postVars)
-    {
-        $ch = curl_init($url);
-        if (!empty(RecaptchaField::$proxy_server)) {
-            curl_setopt($ch, CURLOPT_PROXY, RecaptchaField::$proxy_server);
-            if (!empty(RecaptchaField::$proxy_auth)) {
-                curl_setopt($ch, CURLOPT_PROXYUSERPWD, RecaptchaField::$proxy_auth);
-            }
-        }
-
-        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'reCAPTCHA/PHP');
-        // we need application/x-www-form-urlencoded
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postVars));
-        $response = curl_exec($ch);
-
-        if (class_exists('SS_HTTPResponse')) {
-            $responseObj = new SS_HTTPResponse();
-        } else {
-            // 2.3 backwards compat
-            $responseObj = new HttpResponse();
-        }
-        $responseObj->setBody($response); // 2.2. compat
-        $responseObj->addHeader('Content-Type', 'application/json');
-        return $responseObj;
     }
 }

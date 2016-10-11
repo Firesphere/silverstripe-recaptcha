@@ -2,6 +2,14 @@
 /**
  * @package recaptcha
  */
+use Chillu\Recaptcha\Forms\RecaptchaField;
+use SilverStripe\Control\Controller;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\FormAction;
 
 /**
  * @author Ingo Schommer, SilverStripe Ltd.
@@ -15,8 +23,8 @@ class RecaptchaFieldFunctionalTest extends FunctionalTest
     {
         parent::setUp();
 
-        $this->orig['public_api_key'] = Config::inst()->get('RecaptchaField', 'public_api_key');
-        $this->orig['private_api_key'] = Config::inst()->get('RecaptchaField', 'private_api_key');
+        $this->orig['public_api_key'] = Config::inst()->get('Chillu\\Recaptcha\\RecaptchaField', 'public_api_key');
+        $this->orig['private_api_key'] = Config::inst()->get('Chillu\\Recaptcha\\RecaptchaField', 'private_api_key');
         Config::inst()->update('RecaptchaField', 'public_api_key', 'test');
         Config::inst()->update('RecaptchaField', 'private_api_key', 'test');
         Config::inst()->update('RecaptchaField', 'noscript_enabled', true);
