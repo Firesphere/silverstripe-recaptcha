@@ -1,5 +1,5 @@
-RecaptchaField:
+Chillu\Recaptcha\Forms\RecaptchaField:
   recaptcha_noscript_url: 'https://www.google.com/recaptcha/api/fallback?k=%s'
   recaptcha_js_url: 'https://www.google.com/recaptcha/api.js'
   api_verify_server: 'https://www.google.com/recaptcha/api/siteverify'
-  httpclient_class: 'RecaptchaField_HTTPClient'
+  httpclient_class: 'Chillu\Recaptcha\HTTPClient\RecaptchaField_HTTPClient'

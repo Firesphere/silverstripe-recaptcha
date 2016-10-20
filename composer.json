@@ -14,11 +14,12 @@
   ],
   "require": {
     "silverstripe/spamprotection": "*",
-    "silverstripe/framework": "~4.0"
+    "silverstripe/framework": "~4.0.x-dev"
   },
-  "extra": {
-    "branch-alias": {
-      "dev-master": "3.0.x-dev"
-    }
-  }
+	"extra": {
+		"branch-alias": {
+			"dev-master": "4.0.x-dev"
+		}
+	},
+
 }
