@@ -1,8 +1,10 @@
 <?php
-namespace Chillu\ReCaptcha;
 /**
  * @package recaptcha
  */
+namespace Chillu\Forms\Recaptcha;
+
+use Chillu\Recaptcha\Forms\RecaptchaField;
 use SilverStripe\Control\Director;
 use SilverStripe\Spamprotection\SpamProtector;
 
@@ -30,6 +32,7 @@ class RecaptchaProtector implements SpamProtector
      */
     public function setFieldMapping($fieldMapping)
     {
+		// return nothing. It's unused.
     }
 
 }

@@ -1,18 +1,18 @@
 <?php
-use Chillu\ReCaptcha\RecaptchaField;
-use Chillu\ReCaptcha\RecaptchaField_HTTPClient;
+use Chillu\Recaptcha\Forms\RecaptchaField;
+use Chillu\Recaptcha\Control\RecaptchaField_HTTPClient;
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Convert;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\RequiredFields;
-
+use SilverStripe\Control\HTTPResponse;
 /**
  * @package recaptcha
  */
+
 class RecaptchaFieldTest extends SapphireTest
 {
 
