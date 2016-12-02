@@ -1,7 +1,17 @@
 <?php
+namespace Chillu\ReCaptcha;
 /**
  * @package recaptcha
  */
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Control\Session;
+use SilverStripe\Core\Object;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Forms\FormField;
+use SilverStripe\Forms\Validator;
+use SilverStripe\View\ArrayData;
+use SilverStripe\View\Requirements;
 
 /**
  * Provides an {@link FormField} which allows form to validate for non-bot submissions
@@ -158,14 +168,14 @@ class RecaptchaField extends FormField
      */
     public function validate($validator)
     {
-        /** @var array $request */
+        /** @var array $postVars */
         if(SapphireTest::is_running_test()) {
-            $request = $_REQUEST;
+            $postVars = $_REQUEST;
         } else {
-            $request = Controller::curr()->getRequest();
+            $postVars = Controller::curr()->getRequest()->postVars();
         }
         // don't bother querying the recaptcha-service if fields were empty
-        if (!array_key_exists('g-recaptcha-response', $request) || empty($request['g-recaptcha-response'])) {
+        if (!array_key_exists('g-recaptcha-response', $postVars) || empty($postVars['g-recaptcha-response'])) {
             $validator->validationError(
                 $this->name,
                 _t(
@@ -181,7 +191,7 @@ class RecaptchaField extends FormField
             return false;
         }
 
-        $response = $this->recaptchaHTTPPost($_REQUEST['g-recaptcha-response']);
+        $response = $this->recaptchaHTTPPost($postVars['g-recaptcha-response']);
 
         if (!$response) {
             $validator->validationError(
@@ -302,8 +312,8 @@ class RecaptchaField_HTTPClient extends Object
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postVars));
         $response = curl_exec($ch);
 
-        if (class_exists('SS_HTTPResponse')) {
-            $responseObj = new SS_HTTPResponse();
+        if (class_exists('HTTPResponse')) {
+            $responseObj = new HTTPResponse();
         } else {
             // 2.3 backwards compat
             $responseObj = new HttpResponse();

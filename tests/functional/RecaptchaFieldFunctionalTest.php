@@ -2,6 +2,14 @@
 /**
  * @package recaptcha
  */
+use Chillu\ReCaptcha\RecaptchaField;
+use SilverStripe\Control\Controller;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\FormAction;
 
 /**
  * @author Ingo Schommer, SilverStripe Ltd.

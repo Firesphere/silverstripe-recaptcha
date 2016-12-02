@@ -1,4 +1,14 @@
 <?php
+use Chillu\ReCaptcha\RecaptchaField;
+use Chillu\ReCaptcha\RecaptchaField_HTTPClient;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Core\Convert;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\RequiredFields;
 
 /**
  * @package recaptcha
@@ -29,7 +39,7 @@ class RecaptchaFieldTest_HTTPClient extends RecaptchaField_HTTPClient implements
     public function post($url, $postVars)
     {
         if ($postVars['response'] == 'valid') {
-            $response = new SS_HTTPResponse();
+            $response = new HTTPResponse();
             $data = array(
                 'success'      => true,
                 'challenge_ts' => date('c'),  // timestamp of the challenge load (ISO format yyyy-MM-dd'T'HH:mm:ssZZ)
@@ -41,7 +51,7 @@ class RecaptchaFieldTest_HTTPClient extends RecaptchaField_HTTPClient implements
         }
 
         if ($postVars['response'] == 'invalid') {
-            $response = new SS_HTTPResponse();
+            $response = new HTTPResponse();
             $data = array(
                 'success'      => false,
                 'challenge_ts' => date('c'),
@@ -55,6 +65,6 @@ class RecaptchaFieldTest_HTTPClient extends RecaptchaField_HTTPClient implements
             return $response;
         }
 
-        return new SS_HTTPResponse();
+        return new HTTPResponse();
     }
 }
